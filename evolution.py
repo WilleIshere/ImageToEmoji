@@ -13,14 +13,14 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 __version__ = "0.1.0"
 
 POPULATION_SIZE = 100
-TARGET_IMAGE_PATH = "target_image.jpg"
+TARGET_IMAGE_PATH = "bear.jpg"
 STARTING_IMAGE_PATH = "starting.jpg"
 GENERATION_DIRECTORY = "generations/"
 EMOJIS_DIR = "emojis/"
 MUTATIONS = 1
 GENERATION_LIMIT = 15000
-EMOJI_SIZE_MAX = 10  # Not used yet, the max size will be used for every emoji
-EMOJI_SIZE_MIN = 10
+EMOJI_SIZE_MAX = 8  # Not used yet, the max size will be used for every emoji
+EMOJI_SIZE_MIN = 8
 
 
 def calculate_fitness(image, target_image):
@@ -107,10 +107,9 @@ def format_time_elapsed(start_time):
     elapsed_time = abs(elapsed_time)
     hours, remainder = divmod(elapsed_time, 3600)
     minutes, remainder = divmod(remainder, 60)
-    seconds, milliseconds = divmod(remainder, 1)
-    milliseconds = round(milliseconds * 1000)
+    seconds = divmod(remainder, 1)[0]
 
-    return f"{int(hours):02}:{int(minutes):02}:{int(seconds):02}:{milliseconds:03}"
+    return f"{int(hours):02}:{int(minutes):02}:{int(seconds):02}"
 
 
 def clear_line():
@@ -166,7 +165,7 @@ def main():
 
     # Initializes pygame to act as GUI
     print("Starting window...")
-    screen = pg.display.set_mode((best_image.shape[1], best_image.shape[0] + 60))  # Extra space for text
+    screen = pg.display.set_mode((best_image.shape[1] * 2, best_image.shape[0] + 60))  # Extra space for text
     pg.display.set_caption("Emoji Evolution")
 
     font = pg.font.Font(None, 30)
@@ -222,8 +221,13 @@ def main():
         best_image_transposed = np.transpose(best_image, (1, 0, 2))
         pg_image = pg.surfarray.make_surface(best_image_transposed)
 
+        target_image_ = cv2.cvtColor(target_image, cv2.COLOR_BGR2RGB)
+        target_image_transposed = np.transpose(target_image_, (1, 0, 2))
+        pg_target_image = pg.surfarray.make_surface(target_image_transposed)
+
         screen.fill((0, 0, 0))
-        screen.blit(pg_image, (0, 0))
+        screen.blit(pg_image, (0 - 1, 0))
+        screen.blit(pg_target_image, (target_image.shape[1] + 1, 0))
 
         render_text(screen, f"Generation: {generation}", (10, best_image.shape[0] + 5), font)
         render_text(screen, f"Best Fitness: {fitness:.6f}", (10, best_image.shape[0] + 35), font)
