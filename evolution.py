@@ -12,8 +12,8 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 __version__ = "0.1.0"
 
-POPULATION_SIZE = 100
-TARGET_IMAGE_PATH = "bear.jpg"
+POPULATION_SIZE = 150
+TARGET_IMAGE_PATH = "target_image.jpg"
 STARTING_IMAGE_PATH = "starting.jpg"
 GENERATION_DIRECTORY = "generations/"
 EMOJIS_DIR = "emojis/"
@@ -151,10 +151,11 @@ def main():
         w, h = img.size
         for y in range(h):
             for x in range(w):
-                img.putpixel((x, y), (255, 255, 255))
+                img.putpixel((x, y), (255, 0, 0))
 
         img.save(STARTING_IMAGE_PATH)
         starting_image = cv2.imread(STARTING_IMAGE_PATH)
+    starting_image = cv2.cvtColor(starting_image, cv2.COLOR_BGR2RGB)
 
     print("Scaling emojis...")
     # Resizes all the emojis
