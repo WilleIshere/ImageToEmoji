@@ -45,15 +45,18 @@ class ImageToEmojis:
         if not os.path.exists(EMOJIS_SCALED_PATH):
             print(f"Scaled emojis path {EMOJIS_SCALED_PATH} does not exist.")
             return
-        
+
         emojis = []
-        for emoji_file in os.listdir(EMOJIS_SCALED_PATH):
+        emoji_files = [f for f in os.listdir(EMOJIS_SCALED_PATH) if os.path.isfile(os.path.join(EMOJIS_SCALED_PATH, f))]
+        total = len(emoji_files)
+        for idx, emoji_file in enumerate(emoji_files, 1):
             emoji_path = os.path.join(EMOJIS_SCALED_PATH, emoji_file)
-            if os.path.isfile(emoji_path):
-                emoji = Image.open(emoji_path)
-                emojis.append(emoji)
-                print(f"Loaded emoji from {emoji_path}")
+            emoji = Image.open(emoji_path)
+            emojis.append(emoji)
+            print(f"Loaded emoji {idx}/{total} from {emoji_path}")
         
 
 if __name__ == "__main__":
     app = ImageToEmojis()
+    while True:
+        pass
